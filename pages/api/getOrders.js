@@ -16,17 +16,6 @@ async function handler(req, res) {
 
     const { token } = req.headers;
 
-    let profileName = '';
-    let balance = 0;
-    let properties = {};
-
-
-    // const _user = await fetch("https://api.nobitex.ir/users/profile", {
-    //     headers: { Authorization: "Token " + token },
-    //     method: "GET"
-    // })
-    // const _user_data = await _user.json();
-
     // const _wallets = await fetch("https://api.nobitex.ir/users/wallets/list", {
     //     headers: { Authorization: "Token " + token },
     //     method: "POST"
@@ -54,7 +43,12 @@ async function handler(req, res) {
 
     // })
 
-
+    // const _orders = await fetch("https://api.nobitex.ir/market/orders/list", {
+    //     headers: { Authorization: "Token " + token },
+    //     method: "POST",
+    //     body: JSON.stringify({ status: "done", details: 2 })
+    // })
+    // let _orders_data = await _orders.json();
 
 
     // console.log(properties)
@@ -64,20 +58,37 @@ async function handler(req, res) {
 
     return res.status(200).json({
         ok: true,
-        orders: [{
-            pair: "fff"
-        }]
-        // account: {
-        //     profileName,
-        //     balance,
-        // },
-    })
+        orders: [
+            {
+                pair: "ADA/USDT",
+                type: "buy",
+                actionType: "normal",
 
+                amount: 100,
+                price: 145,
+            },
+            {
+                pair: "BNB/USDT",
+                type: "sell",
+                actionType: "stages",
 
-
-    return res.status(400).json({
-        code: "failed",
-        message: ":(("
+                totalAmount: 500,
+                stages: [
+                    {
+                        price: 550,
+                        percent: 20,
+                    },
+                    {
+                        price: 600,
+                        percent: 40,
+                    },
+                    {
+                        price: 700,
+                        percent: 20,
+                    },
+                ],
+            }
+        ]
     })
 }
 

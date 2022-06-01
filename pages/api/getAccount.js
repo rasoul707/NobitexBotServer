@@ -25,6 +25,12 @@ async function handler(req, res) {
     headers: { Authorization: "Token " + token },
     method: "GET"
   })
+  if (_user.status !== 200) {
+    return res.status(400).json({
+      code: "EXPIRE_SESSION",
+      message: ":(("
+    })
+  }
   const _user_data = await _user.json();
 
   const _wallets = await fetch("https://api.nobitex.ir/users/wallets/list", {
@@ -33,34 +39,11 @@ async function handler(req, res) {
   })
   let _wallets_data = await _wallets.json();
 
-  const _orders = await fetch("https://api.nobitex.ir/market/orders/list", {
-    headers: { Authorization: "Token " + token },
-    method: "POST",
-    body: JSON.stringify({ status: "done", details: 2 })
-  })
-  let _orders_data = await _orders.json();
-
-
   profileName = _user_data.profile.firstName + " " + _user_data.profile.lastName;
+
   _wallets_data.wallets.map(({ rialBalance, balance, currency }) => {
     balance += rialBalance;
-    properties[currency] = {
-      rialBalance,
-      balance
-    };
   });
-
-  // _orders_data.orders.map(({ type, execution, averagePrice, srcCurrency, dstCurrency, matchedAmount, status }) => {
-
-  // })
-
-
-
-
-  // console.log(properties)
-
-
-
 
   return res.status(200).json({
     ok: true,
@@ -68,15 +51,9 @@ async function handler(req, res) {
       profileName,
       balance,
     },
-
   })
 
 
-
-  return res.status(400).json({
-    code: "EXPIRE_SESSION",
-    message: ":(("
-  })
 }
 
 export default handler
