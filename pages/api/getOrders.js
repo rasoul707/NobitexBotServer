@@ -59,35 +59,35 @@ async function handler(req, res) {
     return res.status(200).json({
         ok: true,
         orders: [
-            {
-                pair: "ADA/USDT",
-                type: "buy",
-                actionType: "normal",
+            //     {
+            //         pair: "ADA/USDT",
+            //         type: "buy",
+            //         actionType: "normal",
 
-                amount: 100,
-                price: 145,
-            },
-            {
-                pair: "BNB/USDT",
-                type: "sell",
-                actionType: "stages",
+            //         amount: 100,
+            //         price: 145,
+            //     },
+            //     {
+            //         pair: "BNB/USDT",
+            //         type: "sell",
+            //         actionType: "stages",
 
-                totalAmount: 500,
-                stages: [
-                    {
-                        price: 550,
-                        percent: 20,
-                    },
-                    {
-                        price: 600,
-                        percent: 40,
-                    },
-                    {
-                        price: 700,
-                        percent: 20,
-                    },
-                ],
-            }
+            //         totalAmount: 500,
+            //         stages: [
+            //             {
+            //                 price: 550,
+            //                 percent: 20,
+            //             },
+            //             {
+            //                 price: 600,
+            //                 percent: 40,
+            //             },
+            //             {
+            //                 price: 700,
+            //                 percent: 20,
+            //             },
+            //         ],
+            //     }
         ]
     })
 }

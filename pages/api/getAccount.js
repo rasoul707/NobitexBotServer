@@ -49,7 +49,7 @@ async function handler(req, res) {
     ok: true,
     account: {
       profileName,
-      balance,
+      balance: Math.random().toFixed(3) * 1000,
     },
   })
 
