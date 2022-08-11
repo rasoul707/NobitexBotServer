@@ -25,12 +25,14 @@ async function handler(req, res) {
                 const { token, ratio } = accounts[i]
                 order.amount = order.amount * ratio / 10
                 await normalOrder(token, order);
+                console.log('group->' + i, 'normalOrder', response)
             }
         }
         else {
             // one
             const { token } = req.headers
-            await normalOrder(token, order);
+            const response = await normalOrder(token, order);
+            console.log('newOrder', 'normalOrder', response)
         }
     } else {
         if (accounts) {
@@ -39,6 +41,7 @@ async function handler(req, res) {
                 const { token, ratio } = accounts[i]
                 order.totalAmount = order.totalAmount * ratio / 10
                 await stageOrder(token, order)
+
             }
         }
         else {
@@ -69,6 +72,8 @@ const stageOrder = async (token, order) => {
             price,
         }
         insertStageOrder(re)
+
+
     }
 }
 
