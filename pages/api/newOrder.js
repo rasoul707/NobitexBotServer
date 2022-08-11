@@ -41,9 +41,7 @@ async function handler(req, res) {
             }
             return res.status(200).json({
                 ok: true,
-                result: {
-                    groupOrder
-                }
+                groupOrder
             })
         }
         else {
@@ -54,12 +52,12 @@ async function handler(req, res) {
             if (response.status === "ok") {
                 return res.status(200).json({
                     ok: true,
-                    result: response
+                    ...response
                 })
             } else {
                 return res.status(400).json({
                     ok: false,
-                    result: response
+                    ...response
                 })
             }
         }
