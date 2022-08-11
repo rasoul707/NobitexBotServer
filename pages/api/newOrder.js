@@ -21,7 +21,7 @@ async function handler(req, res) {
     if (actionType === 'normal') {
         if (accounts) {
             // group
-            let result = []
+            let groupOrder = []
             for (let i = 0; i < accounts.length; i++) {
                 const { token, ratio } = accounts[i]
                 order.amount = order.amount * ratio / 10
@@ -42,10 +42,9 @@ async function handler(req, res) {
             return res.status(200).json({
                 ok: true,
                 result: {
-                    groupOrder: result
+                    groupOrder
                 }
             })
-
         }
         else {
             // one
@@ -67,13 +66,17 @@ async function handler(req, res) {
     } else {
         if (accounts) {
             // group
+            let groupOrder = []
             for (let i = 0; i < accounts.length; i++) {
                 const { token, ratio } = accounts[i]
                 order.totalAmount = order.totalAmount * ratio / 10
                 await stageOrder(token, order)
             }
             return res.status(200).json({
-                ok: true
+                ok: true,
+                result: {
+                    groupOrder
+                }
             })
         }
         else {
