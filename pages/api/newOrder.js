@@ -39,7 +39,13 @@ async function handler(req, res) {
                     }
                 }
             }
-            return res.status(200).json(result)
+            return res.status(200).json({
+                ok: true,
+                result: {
+                    groupOrder: result
+                }
+            })
+
         }
         else {
             // one
@@ -66,18 +72,20 @@ async function handler(req, res) {
                 order.totalAmount = order.totalAmount * ratio / 10
                 await stageOrder(token, order)
             }
+            return res.status(200).json({
+                ok: true
+            })
         }
         else {
             // one
             const { token } = req.headers
             await stageOrder(token, order)
+            return res.status(200).json({
+                ok: true
+            })
         }
     }
 
-
-    return res.status(200).json({
-        ok: true
-    })
 }
 
 
