@@ -30,15 +30,16 @@ async function handler(req, res) {
                 if (response.status === "ok") {
                     groupOrder[i] = {
                         ok: true,
-                        result: response
+                        ...response
                     }
                 } else {
                     groupOrder[i] = {
                         ok: false,
-                        result: response
+                        ...response
                     }
                 }
             }
+            console.log(groupOrder)
             return res.status(200).json({
                 ok: true,
                 groupOrder
@@ -59,7 +60,6 @@ async function handler(req, res) {
                     ok: false,
                     ...response
                 }
-                console.log(m)
                 return res.status(400).json(m)
             }
         }
