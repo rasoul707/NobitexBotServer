@@ -1,4 +1,4 @@
-const { insertStageOrder } = require("../../database")
+const { insertStageOrder, insertNormalOrder } = require("../../database")
 
 function runMiddleware(req, res, fn) {
     return new Promise((resolve, reject) => {
@@ -70,19 +70,32 @@ async function handler(req, res) {
             for (let i = 0; i < accounts.length; i++) {
                 const { token, ratio } = accounts[i]
                 order.totalAmount = order.totalAmount * ratio / 10
-                await stageOrder(token, order)
+                const response = await stageOrder(token, order)
+                if (response === "ACCOUNT_ERROR") {
+                    groupOrder[i] = {
+                        ok: false,
+                        code: "ACCOUNT_ERROR",
+                        message: "ACCOUNT_ERROR",
+                    }
+                }
+
             }
             return res.status(200).json({
                 ok: true,
-                result: {
-                    groupOrder
-                }
+                groupOrder
             })
         }
         else {
             // one
             const { token } = req.headers
-            await stageOrder(token, order)
+            const response = await stageOrder(token, order)
+            if (response === "ACCOUNT_ERROR") {
+                return res.status(403).json({
+                    ok: false,
+                    code: "ACCOUNT_ERROR",
+                    message: "ACCOUNT_ERROR",
+                })
+            }
             return res.status(200).json({
                 ok: true
             })
@@ -96,22 +109,42 @@ async function handler(req, res) {
 
 
 const stageOrder = async (token, order) => {
-    for (let i = 0; i < order.stages.length; i++) {
-        const { percent, price } = order.stages[i]
-        const re = {
-            token,
-            type: order.type,
-            pair: order.pair,
-            amount: order.totalAmount * percent / 100,
-            price,
-        }
-        insertStageOrder(re)
+    const _user = await fetch("https://api.nobitex.ir/users/profile", {
+        headers: { Authorization: "Token " + token },
+        method: "GET"
+    })
+
+    if (_user.status !== 200) {
+        return "ACCOUNT_ERROR"
     }
+    const _user_data = await _user.json();
+    const email = _user_data.profile.email
+
+
+    const re = {
+        email,
+        pair: order.pair,
+        type: order.type,
+        totalAmount: order.totalAmount,
+        stages: order.stages,
+    }
+    insertStageOrder(re)
 }
 
 
 
 const normalOrder = async (token, order) => {
+
+    const _user = await fetch("https://api.nobitex.ir/users/profile", {
+        headers: { Authorization: "Token " + token },
+        method: "GET"
+    })
+
+    if (_user.status !== 200) {
+        return "ACCOUNT_ERROR"
+    }
+    const _user_data = await _user.json();
+    const email = _user_data.profile.email
 
     const [srcCurrency, dstCurrency] = order.pair.split("/")
     let data = {
@@ -138,6 +171,19 @@ const normalOrder = async (token, order) => {
         method: "POST",
         body: JSON.stringify(data)
     })
+
+
+    if (result.status === 200) {
+        const re = {
+            email,
+            pair: order.pair,
+            type: order.type,
+            amount: order.amount,
+            price: order.price,
+        }
+        insertNormalOrder(re)
+    }
+
     const response = await result.json();
     return response
 }
