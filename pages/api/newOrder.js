@@ -28,12 +28,12 @@ async function handler(req, res) {
                 const response = await normalOrder(token, order);
                 console.log('group->' + i, 'normalOrder', response)
                 if (response.status === "ok") {
-                    result[i] = {
+                    groupOrder[i] = {
                         ok: true,
                         result: response
                     }
                 } else {
-                    result[i] = {
+                    groupOrder[i] = {
                         ok: false,
                         result: response
                     }
