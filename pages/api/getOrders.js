@@ -32,10 +32,10 @@ async function handler(req, res) {
 
     const _orders = await getOrdersList(email)
     let orders = []
-    for (let i = 0; i < orders.length; i++) {
+    for (let i = 0; i < _orders.length; i++) {
         orders.push({
-            ...orders[i],
-            ...(orders[i].actionType === "stages" ? JSON.parse(orders[i].stages) : null)
+            ..._orders[i],
+            ...(_orders[i].actionType === "stages" ? JSON.parse(_orders[i].stages) : null)
         })
     }
 
