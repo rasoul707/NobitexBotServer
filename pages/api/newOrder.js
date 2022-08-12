@@ -55,10 +55,12 @@ async function handler(req, res) {
                     ...response
                 })
             } else {
-                return res.status(400).json({
+                const m = {
                     ok: false,
                     ...response
-                })
+                }
+                console.log(m)
+                return res.status(400).json(m)
             }
         }
     } else {
